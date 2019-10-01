@@ -24,6 +24,7 @@ const Form = props => {
             placeholder="Enter Student Name"
             value={name}
             onChange={newName => setName(newName.target.value)}
+            onSubmit={event => event.preventDefault()}
           />
         </form>
         <InterviewerList
@@ -37,7 +38,7 @@ const Form = props => {
           <Button danger onClick={e => cancel()}>
             Cancel
           </Button>
-          <Button confirm onClick={props.onConfirm}>
+          <Button confirm onClick={props.onSave}>
             Save
           </Button>
         </section>
