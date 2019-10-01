@@ -9,4 +9,17 @@ const getAppointmentsForDay = (state, day) => {
   }
 };
 
-export { getAppointmentsForDay };
+const getInterview = (state, interview) => {
+  if (!interview) {
+    return interview;
+  } else {
+    const interviewerInfo = state.interviewers[interview.interviewer];
+    let newInterview = {
+      student: interview.student,
+      interviewer: interviewerInfo
+    };
+    return newInterview;
+  }
+};
+
+export { getAppointmentsForDay, getInterview };
