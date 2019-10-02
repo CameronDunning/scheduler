@@ -51,8 +51,7 @@ const Application = props => {
     console.log(appointments);
     return axios
       .put(`/api/appointments/${id}`, appointment)
-      .then(() => setState({ ...state, appointments }))
-      .catch(err => console.log("Error: ", err));
+      .then(() => setState({ ...state, appointments }));
   };
 
   const deleteInterview = id => {
@@ -64,12 +63,9 @@ const Application = props => {
       ...state.appointments,
       [id]: appointment
     };
-    return axios
-      .delete(`/api/appointments/${id}`)
-      .then(() => {
-        setState({ ...state, appointments });
-      })
-      .catch(err => console.log("Error: ", err));
+    return axios.delete(`/api/appointments/${id}`).then(() => {
+      setState({ ...state, appointments });
+    });
   };
 
   const schedule = appointments.map(appointment => {
