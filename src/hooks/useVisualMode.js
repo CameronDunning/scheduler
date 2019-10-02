@@ -4,6 +4,7 @@ const useVisualMode = initial => {
   const [mode, setMode] = useState(initial);
   const [history, setHistory] = useState([initial]);
 
+  // Adds the mode history in reverse order
   const transition = (newMode, replace = false) => {
     setMode(newMode);
     if (replace) {

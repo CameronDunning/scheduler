@@ -12,6 +12,7 @@ import { useVisualMode } from "hooks/useVisualMode";
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
 const CREATE = "CREATE";
+const EDIT = "EDIT";
 const SAVING = "SAVING";
 const DELETING = "DELETING";
 const CONFIRM_DELETE = "CONFIRM_DELETE";
@@ -27,12 +28,12 @@ const Appointment = props => {
       student: name,
       interviewer
     };
-    props.bookInterview(props.id, interview).then(transition(SHOW));
+    props.bookInterview(props.id, interview).then(() => transition(SHOW));
   };
 
   const deleteInt = () => {
     transition(DELETING);
-    props.deleteInterview(props.id).then(transition(EMPTY));
+    props.deleteInterview(props.id).then(() => transition(EMPTY));
   };
 
   const confirmDelete = () => {
@@ -48,6 +49,7 @@ const Appointment = props => {
           student={props.interview.student}
           interviewer={props.interview.interviewer}
           onDelete={() => confirmDelete()}
+          onEdit={() => transition(EDIT)}
         />
       )}
       {mode === CREATE && (
@@ -55,6 +57,15 @@ const Appointment = props => {
           interviewers={props.interviewers}
           onSave={(name, interviewer) => save(name, interviewer)}
           onCancel={() => back()}
+        />
+      )}
+      {mode === EDIT && (
+        <Form
+          interviewers={props.interviewers}
+          onSave={(name, interviewer) => save(name, interviewer)}
+          onCancel={() => back()}
+          interviewer={props.interview.interviewer.id}
+          name={props.interview.student}
         />
       )}
       {mode === SAVING && <Status message={"Saving"} />}

@@ -51,19 +51,24 @@ const Application = props => {
     console.log(appointments);
     return axios
       .put(`/api/appointments/${id}`, appointment)
-      .then(setState({ ...state, appointments }))
+      .then(() => setState({ ...state, appointments }))
       .catch(err => console.log("Error: ", err));
   };
 
   const deleteInterview = id => {
-    console.log(id);
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
     const appointments = {
       ...state.appointments,
-      [id]: null
+      [id]: appointment
     };
     return axios
       .delete(`/api/appointments/${id}`)
-      .then(setState({ ...state }))
+      .then(() => {
+        setState({ ...state, appointments });
+      })
       .catch(err => console.log("Error: ", err));
   };
 
