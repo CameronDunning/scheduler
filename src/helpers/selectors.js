@@ -9,6 +9,17 @@ const getAppointmentsForDay = (state, day) => {
   }
 };
 
+const getInterviewersForDay = (state, day) => {
+  let apptObj = state.days.find(e => e.name === day);
+  if (apptObj === undefined) {
+    return [];
+  } else {
+    let interviewersArray = apptObj.interviewers;
+    let interviewers = interviewersArray.map(x => state.interviewers[x]);
+    return interviewers === undefined ? [] : interviewers;
+  }
+};
+
 const getInterview = (state, interview) => {
   if (!interview) {
     return interview;
@@ -22,4 +33,4 @@ const getInterview = (state, interview) => {
   }
 };
 
-export { getAppointmentsForDay, getInterview };
+export { getAppointmentsForDay, getInterviewersForDay, getInterview };
