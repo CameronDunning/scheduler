@@ -61,7 +61,10 @@ const Application = props => {
       ...state.appointments,
       [id]: null
     };
-    return axios.delete(`/api/appointments/${id}`).then(setState({ ...state }));
+    return axios
+      .delete(`/api/appointments/${id}`)
+      .then(setState({ ...state }))
+      .catch(err => console.log("Error: ", err));
   };
 
   const schedule = appointments.map(appointment => {
