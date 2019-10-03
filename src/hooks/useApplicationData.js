@@ -6,6 +6,14 @@ const useApplicationData = () => {
   const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
   const SET_INTERVIEW = "SET_INTERVIEW";
 
+  const daysDictionary = {
+    Monday: 0,
+    Tuesday: 1,
+    Wednesday: 2,
+    Thursday: 3,
+    Friday: 4
+  };
+
   const reducer = (state, action) => {
     switch (action.type) {
       case SET_DAY:
@@ -18,7 +26,8 @@ const useApplicationData = () => {
       case SET_INTERVIEW:
         return {
           ...state,
-          appointments: action.appointments
+          appointments: action.appointments,
+          days: action.days
         };
       default:
         throw new Error(
@@ -61,9 +70,11 @@ const useApplicationData = () => {
       ...state.appointments,
       [id]: appointment
     };
-    return axios
-      .put(`/api/appointments/${id}`, appointment)
-      .then(() => dispatch({ type: SET_INTERVIEW, appointments }));
+    return axios.put(`/api/appointments/${id}`, appointment).then(() => {
+      let newDays = state.days;
+      newDays[daysDictionary[state.day]].spots--;
+      dispatch({ type: SET_INTERVIEW, appointments, days: newDays });
+    });
   };
 
   const deleteInterview = id => {
@@ -76,7 +87,9 @@ const useApplicationData = () => {
       [id]: appointment
     };
     return axios.delete(`/api/appointments/${id}`).then(() => {
-      dispatch({ type: SET_INTERVIEW, appointments });
+      let newDays = state.days;
+      newDays[daysDictionary[state.day]].spots++;
+      dispatch({ type: SET_INTERVIEW, appointments, days: newDays });
     });
   };
 
