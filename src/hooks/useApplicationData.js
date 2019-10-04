@@ -26,8 +26,7 @@ const useApplicationData = () => {
       case SET_INTERVIEW:
         return {
           ...state,
-          appointments: action.appointments,
-          days: action.days
+          appointments: action.appointments
         };
       default:
         throw new Error(
@@ -59,6 +58,23 @@ const useApplicationData = () => {
     });
   }, []);
 
+  // useEffect(() => {
+  //   const socket = new WebSocket("ws://localhost:8001");
+  //   socket.onopen = event => {
+  //     socket.send("ping");
+  //   };
+  //   socket.onmessage = event => {
+  //     console.log(event.data);
+  //     const receivedMessage = JSON.parse(event.data);
+  //     console.log(receivedMessage);
+  //   };
+  //   // ping
+  //   // onopen
+  //   // check message
+  //   // update state with new appointment data
+  //   // check if state exists
+  // }, []);
+
   const setDay = day => dispatch({ type: SET_DAY, day: day });
 
   const bookInterview = (id, interview) => {
@@ -71,9 +87,7 @@ const useApplicationData = () => {
       [id]: appointment
     };
     return axios.put(`/api/appointments/${id}`, appointment).then(() => {
-      let newDays = state.days;
-      newDays[daysDictionary[state.day]].spots--;
-      dispatch({ type: SET_INTERVIEW, appointments, days: newDays });
+      dispatch({ type: SET_INTERVIEW, appointments });
     });
   };
 
@@ -87,9 +101,7 @@ const useApplicationData = () => {
       [id]: appointment
     };
     return axios.delete(`/api/appointments/${id}`).then(() => {
-      let newDays = state.days;
-      newDays[daysDictionary[state.day]].spots++;
-      dispatch({ type: SET_INTERVIEW, appointments, days: newDays });
+      dispatch({ type: SET_INTERVIEW, appointments });
     });
   };
 
