@@ -14,6 +14,30 @@ const useApplicationData = () => {
     Friday: 4
   };
 
+  const daysWithUpdatedSpots = (
+    days,
+    appointmentID,
+    addInterview,
+    removeInterview
+  ) => {
+    let dayToUpdate = 0;
+    for (let day in days) {
+      console.log(day);
+      for (let appointment of days[day].appointments) {
+        if (appointment === appointmentID) {
+          console.log(appointment);
+          if (addInterview) {
+            days[day].spots--;
+          } else if (removeInterview) {
+            days[day].spots++;
+          }
+          break;
+        }
+      }
+    }
+    return days;
+  };
+
   const reducer = (state, action) => {
     switch (action.type) {
       case SET_DAY:
@@ -58,22 +82,43 @@ const useApplicationData = () => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   const socket = new WebSocket("ws://localhost:8001");
-  //   socket.onopen = event => {
-  //     socket.send("ping");
-  //   };
-  //   socket.onmessage = event => {
-  //     console.log(event.data);
-  //     const receivedMessage = JSON.parse(event.data);
-  //     console.log(receivedMessage);
-  //   };
-  //   // ping
-  //   // onopen
-  //   // check message
-  //   // update state with new appointment data
-  //   // check if state exists
-  // }, []);
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:8001");
+    socket.onopen = event => {
+      socket.send("ping");
+    };
+    socket.onmessage = event => {
+      console.log(event.data);
+      const receivedMessage = JSON.parse(event.data);
+      console.log(receivedMessage);
+      const setInterview = receivedMessage.type === "SET_INTERVIEW";
+      const appointmentID = receivedMessage.id;
+      const interview = receivedMessage.interview;
+      if (setInterview && state.days.length > 0) {
+        console.log("in setInterview");
+        console.log("state: ", state);
+        console.log("appointment ID: ", appointmentID);
+        console.log("interview: ", interview);
+        const addInterview = interview ? true : false;
+        const removeInterview = interview ? false : true;
+        let newDays = { ...state.days };
+        console.log("NewDays: ", newDays);
+        newDays = daysWithUpdatedSpots(
+          { ...state.days },
+          appointmentID,
+          addInterview,
+          removeInterview
+        );
+        console.log(newDays);
+      }
+    };
+    // ping
+    // onopen
+    // check message
+    // update state with new appointment data
+    // check if state exists
+    // close the connection
+  });
 
   const setDay = day => dispatch({ type: SET_DAY, day: day });
 
