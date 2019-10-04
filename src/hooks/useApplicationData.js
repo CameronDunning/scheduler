@@ -6,36 +6,16 @@ const useApplicationData = () => {
   const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
   const SET_INTERVIEW = "SET_INTERVIEW";
 
-  const daysDictionary = {
-    Monday: 0,
-    Tuesday: 1,
-    Wednesday: 2,
-    Thursday: 3,
-    Friday: 4
-  };
-
-  const daysWithUpdatedSpots = (
-    days,
-    appointmentID,
-    addInterview,
-    removeInterview
-  ) => {
-    let dayToUpdate = 0;
-    for (let day in days) {
-      console.log(day);
-      for (let appointment of days[day].appointments) {
-        if (appointment === appointmentID) {
-          console.log(appointment);
-          if (addInterview) {
-            days[day].spots--;
-          } else if (removeInterview) {
-            days[day].spots++;
-          }
-          break;
+  const updateSpotsRemaining = (appointments, days) => {
+    for (const day in days) {
+      let spots = 5;
+      for (const appointment of days[day].appointments) {
+        if (appointments[appointment].interview !== null) {
+          spots--;
         }
       }
+      days[day].spots = spots;
     }
-    console.log("days: ", days);
     return days;
   };
 
@@ -85,21 +65,12 @@ const useApplicationData = () => {
 
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:8001");
-    socket.onopen = event => {
-      socket.send("ping");
-    };
     socket.onmessage = event => {
-      // console.log(event.data);
       const receivedMessage = JSON.parse(event.data);
-      // console.log(receivedMessage);
       const setInterview = receivedMessage.type === "SET_INTERVIEW";
       const appointmentID = receivedMessage.id;
       const interview = receivedMessage.interview;
       if (setInterview && state.days.length > 0) {
-        // console.log("in setInterview");
-        // console.log("state: ", state);
-        // console.log("appointment ID: ", appointmentID);
-        // console.log("interview: ", interview);
         const appointment = {
           ...state.appointments[appointmentID],
           interview: interview ? { ...interview } : null
@@ -108,19 +79,12 @@ const useApplicationData = () => {
           ...state.appointments,
           [appointmentID]: appointment
         };
-        dispatch({ type: SET_INTERVIEW, appointments });
-        // console.log("new state: ", state);
-        // const addInterview = interview ? true : false;
-        // const removeInterview = interview ? false : true;
-        // let newDays = { ...state.days };
-        // console.log("NewDays: ", newDays);
-        // newDays = daysWithUpdatedSpots(
-        //   newDays,
-        //   appointmentID,
-        //   addInterview,
-        //   removeInterview
-        // );
-        // console.log(newDays);
+        const newDays = { ...state.days };
+        dispatch({
+          type: SET_INTERVIEW,
+          appointments,
+          days: updateSpotsRemaining(appointments, newDays)
+        });
       }
     };
     return () => {
@@ -140,7 +104,12 @@ const useApplicationData = () => {
       [id]: appointment
     };
     return axios.put(`/api/appointments/${id}`, appointment).then(() => {
-      dispatch({ type: SET_INTERVIEW, appointments });
+      const newDays = { ...state.days };
+      dispatch({
+        type: SET_INTERVIEW,
+        appointments,
+        days: updateSpotsRemaining(appointments, newDays)
+      });
     });
   };
 
@@ -154,7 +123,12 @@ const useApplicationData = () => {
       [id]: appointment
     };
     return axios.delete(`/api/appointments/${id}`).then(() => {
-      dispatch({ type: SET_INTERVIEW, appointments });
+      const newDays = { ...state.days };
+      dispatch({
+        type: SET_INTERVIEW,
+        appointments,
+        days: updateSpotsRemaining(appointments, newDays)
+      });
     });
   };
 
