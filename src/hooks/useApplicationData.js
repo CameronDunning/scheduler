@@ -1,23 +1,23 @@
 import { useEffect, useReducer } from "react";
 import axios from "axios";
 
+const updateSpotsRemaining = (appointments, days) => {
+  for (const day in days) {
+    let spots = 5;
+    for (const appointment of days[day].appointments) {
+      if (appointments[appointment].interview !== null) {
+        spots--;
+      }
+    }
+    days[day].spots = spots;
+  }
+  return days;
+};
+
 const useApplicationData = () => {
   const SET_DAY = "SET_DAY";
   const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
   const SET_INTERVIEW = "SET_INTERVIEW";
-
-  const updateSpotsRemaining = (appointments, days) => {
-    for (const day in days) {
-      let spots = 5;
-      for (const appointment of days[day].appointments) {
-        if (appointments[appointment].interview !== null) {
-          spots--;
-        }
-      }
-      days[day].spots = spots;
-    }
-    return days;
-  };
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -31,7 +31,8 @@ const useApplicationData = () => {
       case SET_INTERVIEW:
         return {
           ...state,
-          appointments: action.appointments
+          appointments: action.appointments,
+          days: action.days
         };
       default:
         throw new Error(
@@ -79,7 +80,7 @@ const useApplicationData = () => {
           ...state.appointments,
           [appointmentID]: appointment
         };
-        const newDays = { ...state.days };
+        const newDays = [...state.days];
         dispatch({
           type: SET_INTERVIEW,
           appointments,
@@ -104,7 +105,7 @@ const useApplicationData = () => {
       [id]: appointment
     };
     return axios.put(`/api/appointments/${id}`, appointment).then(() => {
-      const newDays = { ...state.days };
+      const newDays = [...state.days];
       dispatch({
         type: SET_INTERVIEW,
         appointments,
@@ -123,7 +124,7 @@ const useApplicationData = () => {
       [id]: appointment
     };
     return axios.delete(`/api/appointments/${id}`).then(() => {
-      const newDays = { ...state.days };
+      const newDays = [...state.days];
       dispatch({
         type: SET_INTERVIEW,
         appointments,
