@@ -19,10 +19,6 @@ $appointment-height: 11rem;
         @include button-active--opacity;
       }
     }
-
-    &:last-of-type {
-      display: none;
-    }
   }
 
   &__time {

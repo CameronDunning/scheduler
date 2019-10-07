@@ -61,7 +61,7 @@ const Appointment = props => {
   }, [props.interview, transition, mode]);
 
   return (
-    <>
+    <article className="appointment" data-testid="appointment">
       <Header time={props.time} />
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
       {mode === SHOW && props.interview && (
@@ -101,9 +101,9 @@ const Appointment = props => {
         <Error message={"Error saving"} onClose={() => back()} />
       )}
       {mode === ERROR_DELETING && (
-        <Error message={"Error saving"} onClose={() => back()} />
+        <Error message={"Error deleting"} onClose={() => back()} />
       )}
-    </>
+    </article>
   );
 };
 

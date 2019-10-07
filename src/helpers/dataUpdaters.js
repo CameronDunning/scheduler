@@ -1,9 +1,9 @@
 const updateSpotsRemaining = (appointments, days) => {
   for (const day in days) {
-    let spots = 5;
+    let spots = 0;
     for (const appointment of days[day].appointments) {
-      if (appointments[appointment].interview !== null) {
-        spots--;
+      if (appointments[appointment].interview === null) {
+        spots++;
       }
     }
     days[day].spots = spots;
