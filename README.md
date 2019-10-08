@@ -6,7 +6,7 @@ A simple interview scheduler for administrators at Lighthouse Labs.
 
 ## Final Project
 
-!["Functionality Demonstration"]()
+!["Functionality Demonstration"](https://github.com/CameronDunning/scheduler/blob/master/public/images/Demo.gif)
 
 ## Getting Started
 
