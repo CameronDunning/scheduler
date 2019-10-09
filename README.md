@@ -37,3 +37,10 @@ npm test
 ```sh
 npm run storybook
 ```
+
+## Dependencies
+
+- Node 5.10.x or above
+- Axios 0.19.x or above
+- Classnames 2.2.6 or above
+- react 16.9.0 or above
