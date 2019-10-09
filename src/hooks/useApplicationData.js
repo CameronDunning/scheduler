@@ -59,7 +59,7 @@ const useApplicationData = () => {
     return () => {
       socket.close();
     };
-  });
+  }, []);
 
   const setDay = day => dispatch({ type: SET_DAY, day: day });
 
