@@ -42,6 +42,7 @@ const useApplicationData = () => {
       const setInterview = receivedMessage.type === "SET_INTERVIEW";
       const appointmentID = receivedMessage.id;
       const interview = receivedMessage.interview;
+      console.log("just before if:", state);
       console.log(receivedMessage);
       if (setInterview && state.days.length > 0) {
         console.log("inside setInterview:", state);
@@ -61,7 +62,7 @@ const useApplicationData = () => {
     return () => {
       socket.close();
     };
-  }, []);
+  });
 
   const setDay = day => dispatch({ type: SET_DAY, day: day });
 
