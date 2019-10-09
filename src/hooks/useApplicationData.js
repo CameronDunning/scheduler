@@ -36,7 +36,7 @@ const useApplicationData = () => {
   }, []);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8001");
+    const socket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
     socket.onmessage = event => {
       const receivedMessage = JSON.parse(event.data);
       const setInterview = receivedMessage.type === "SET_INTERVIEW";
