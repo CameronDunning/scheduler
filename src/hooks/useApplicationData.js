@@ -21,8 +21,11 @@ const useApplicationData = () => {
   useEffect(() => {
     Promise.all([
       axios.get(`/api/days`),
+      console.log("p1"),
       axios.get(`/api/appointments`),
-      axios.get(`/api/interviewers`)
+      console.log("p2"),
+      axios.get(`/api/interviewers`),
+      console.log("p3")
     ]).then(all => {
       dispatch({
         type: SET_APPLICATION_DATA,
