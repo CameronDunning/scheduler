@@ -31,8 +31,8 @@ const useApplicationData = () => {
         type: SET_APPLICATION_DATA,
         data: {
           days: all[0].data,
-          appointments: all[1].data,
-          interviewers: all[2].data
+          appointments: all[2].data,
+          interviewers: all[4].data
         }
       });
     });
